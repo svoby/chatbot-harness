@@ -1,0 +1,35 @@
+---
+description: LLM grounding rules for the AI Product Assistant
+globs: server/**,app/api/**
+alwaysApply: true
+---
+
+# Assistant grounding
+
+## The invariant
+
+The LLM is **never** the source of product facts.
+
+- `ProductRecommendation.reasons` must be derivable from `Product` fields
+  returned by `server/tools/searchProducts.ts`.
+- The LLM may write prose *about* products already selected by the search tool.
+- The LLM must never invent product names, prices, SPF values, or attributes.
+
+## Key placement
+
+- LLM SDK imports and provider keys exist **only** in `server/llm/**`.
+- `NEXT_PUBLIC_*` is **forbidden** for any LLM or provider configuration.
+- All `server/**` files carry `import "server-only"` at the top.
+
+## Fallback requirement
+
+- `extractIntent` and `explain` calls that go to the real LLM adapter **must**
+  validate the LLM's output against the typed contract.
+- On parse failure (malformed JSON, missing required fields), fall back to the
+  deterministic path and still return a valid `ChatResponse`.
+- Never propagate a raw LLM parse error to the client.
+
+## System prompt constraint (M5+)
+
+The LLM system prompt for explanation must include:
+> "Only describe products and fields present in the JSON provided. Do not invent facts."

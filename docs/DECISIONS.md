@@ -1,0 +1,56 @@
+# Decisions
+
+Append-only log of non-trivial technical decisions.
+Format: `## YYYY-MM-DD — Title` then context / decision / consequences.
+
+---
+
+## 2026-05-12 — Tailwind CSS as styling approach
+
+**Context:** Choosing a styling system for the prototype.
+**Decision:** Tailwind CSS 4 (included in Next.js 16 scaffold default).
+**Consequences:** Utility-class styling throughout UI components. No parallel CSS system introduced.
+
+---
+
+## 2026-05-12 — LLM provider: OpenAI (gpt-4o-mini)
+
+**Context:** Need to choose a provider (OpenAI, Anthropic, etc.) for real LLM calls.
+**Decision:** OpenAI with `gpt-4o-mini`. Cost-effective, wide tooling, native JSON-mode support.
+  Mock LLM used through M4; `gpt-4o-mini` active at M5 when `LLM_MODE=real`.
+**Consequences:** `OPENAI_API_KEY` required for real mode. System still fully functional without
+  it via `LLM_MODE=mock` (deterministic fallback in both intent extraction and explanation).
+  Can switch to Anthropic or other provider by replacing `server/llm/provider.ts`; interface unchanged.
+
+---
+
+## 2026-05-12 — No validation library (no zod)
+
+**Context:** Route boundary needs input validation.
+**Decision:** Hand-written lightweight guard at the route level for now.
+  Add `zod` only when a second validation use-case appears.
+**Consequences:** Less boilerplate; no extra dependency. Revisit if validation logic grows.
+
+---
+
+## 2026-05-12 — No testing framework in first slices
+
+**Context:** When to introduce Vitest/Jest.
+**Decision:** Deferred. Revisit if a regression bites, or before M5 (grounding contract is subtle enough to warrant tests).
+**Consequences:** No test runner configured in M0–M4. Smoke-checking done manually.
+
+---
+
+## 2026-05-12 — Adapter rule
+
+**Context:** When to introduce an abstraction/interface.
+**Decision:** Introduce an adapter only when there are 2 real implementations OR 1 real + 1 test double we actually use.
+**Consequences:** Prevents premature abstraction. `CatalogRepository`, `RankingStrategy`, `PromptTemplate` etc. not created until that bar is met.
+
+---
+
+## 2026-05-12 — server-only package for server modules
+
+**Context:** Preventing accidental client-side imports of server modules.
+**Decision:** All `server/**` files carry `import "server-only"` at the top. Next.js build fails fast on violations.
+**Consequences:** Explicit boundary enforcement. Requires `server-only` npm package.

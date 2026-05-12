@@ -1,0 +1,27 @@
+---
+description: Project memory — docs reading and update protocol
+alwaysApply: true
+---
+
+# Project memory
+
+## Before any non-trivial change
+
+1. Read `docs/README.md` (doc map + update protocol).
+2. Read `docs/PROJECT_BRIEF.md` (invariant + non-goals).
+3. For changes that cross layers or touch the folder structure, also read `docs/ARCHITECTURE.md`.
+4. For changes to types or the API surface, also read `docs/API_CONTRACTS.md`.
+
+## When changing things
+
+- **Type changed** in `shared/types/**` → update `docs/API_CONTRACTS.md` in the same change.
+- **Folder or layer boundary changed** → update `docs/ARCHITECTURE.md`.
+- **Saying "no" to an addition** → append a one-liner to `docs/DEFERRED_SCOPE.md`.
+- **Non-trivial judgment call** → append a dated entry to `docs/DECISIONS.md`.
+- **Commit/PR description** must list docs touched, or state "docs N/A".
+
+## Never silently add infrastructure
+
+Do not add databases, vector stores, auth systems, queues, or LLM agent frameworks
+without an entry in `docs/DECISIONS.md` and explicit user approval.
+When tempted, add it to `docs/DEFERRED_SCOPE.md` instead and ask the user.
