@@ -1,0 +1,13 @@
+---
+description: TypeScript and React conventions for App Router Next.js UI
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# TypeScript + React (Next.js)
+
+- Prefer server vs client boundaries: default to Server Components; add `"use client"` only where interaction or browser APIs require it.
+- Keep data fetching for secrets and provider keys on the server (`app/**/route.ts`, Server Actions, server-only modules). Do not pass raw API keys into client props.
+- Colocate small components; extract hooks when logic repeats; avoid prop drilling across unrelated trees without a deliberate state boundary.
+- Use clear names over abbreviations; guard clauses for invalid state; shallow, focused components rather than sprawling pages.
+- Match existing project patterns for styling (Tailwind/CSS modules/etc.) rather than introducing a parallel system in the same PR.

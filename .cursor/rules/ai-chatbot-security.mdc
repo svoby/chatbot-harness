@@ -1,0 +1,11 @@
+---
+description: AI chatbot apps — secrets, SSR vs client, and trusting user input
+alwaysApply: true
+---
+
+# AI chatbot safety (Next / React)
+
+- **Never expose** LLM/vendor API keys, service role keys, or long-lived secrets to client bundles (`NEXT_PUBLIC_*` is public). Call providers from Route Handlers, Server Actions, or a backend the browser does not fully control.
+- Treat model output and user uploads as untrusted when rendering (`dangerouslySetInnerHTML`) or executing tools; sanitize / allowlist behaviors.
+- **Auth and quotas:** do not infer identity from editable client-only fields alone; rely on validated session/token on the server for anything sensitive.
+- Prefer streaming and cancellation patterns that avoid hanging serverless invocations beyond platform limits when you add real traffic.

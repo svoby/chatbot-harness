@@ -1,0 +1,31 @@
+---
+description: After multi-iteration feature work, run a mandatory diff audit before marking the task complete. Classify changes, flag risks; propose smallest safe cleanup; do not add new behavior during the audit.
+alwaysApply: true
+---
+
+# Post-feature diff audit (multi-iteration work)
+
+Applies when a feature needed **multiple fix iterations** (tests flaky, regressions, trial-and-error) before the outcome was correct.
+
+## Before marking the task complete
+
+1. **Map the diff to the task** — Compare the final change set to the original request; anything outside scope should be explained or reverted.
+2. **Classify every non-trivial change** as one of:
+   - **Required** — implements the task or an unavoidable consequence (e.g. regression fix tied to the feature).
+   - **Cleanup** — debt removal, simplification, or narrowing that improves maintainability without changing product intent.
+   - **Suspicious** — unclear necessity, possible hack, or deserves human follow-up; call it out explicitly.
+   - **Unrelated** — not justified by the task; **should be reverted** or moved to a separate change/PR.
+3. **Flag explicitly if the diff contains any of:**
+   - **Weakened tests** — looser assertions, dropped cases, or coverage that no longer matches the original intent.
+   - **Production code added mainly for tests** — broad seams or toggles that exist only for fixtures.
+   - **Changed defaults** — env defaults, feature flags, tuning constants, or config changed without task justification.
+   - **Public API expansion** — new exported surface (`export` creep, sprawling barrel files) when a tighter module boundary would suffice.
+   - **Unrelated churn** — lockfile-only noise or generated artifacts committed without justification.
+   - **Security mistakes** — API keys / tokens / model credentials reachable from client bundles or logged; trusting unauthenticated browser input for privileged actions or billing-sensitive behavior.
+4. **Propose the smallest safe cleanup** — ordered list: what to revert, what to narrow (visibility, exports), what to move to server-only helpers, what to document for follow-up. **Do not** implement new product behavior or expand scope while performing this audit.
+5. **Separation of roles** — The audit pass produces a **report and proposals**; treat “implement cleanup” as a deliberate follow-up step if it would touch more than trivial lines.
+
+## Out of scope during the audit
+
+- No new features, UX, or product rules “while we’re here.”
+- No opportunistic refactors unless they are **strictly** necessary to classify or safely revert an unrelated change.
