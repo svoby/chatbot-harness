@@ -44,7 +44,7 @@ export default function ChatPanel() {
         { role: "assistant", response: data },
       ]);
       setLastFollowUps(data.followUps ?? []);
-    } catch (err) {
+    } catch {
       setMessages((prev) => [
         ...prev,
         {

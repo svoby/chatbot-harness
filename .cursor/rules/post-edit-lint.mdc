@@ -1,0 +1,15 @@
+---
+description: Run lint and auto-fix formatting after every substantive edit
+alwaysApply: true
+---
+
+# Post-edit lint and format
+
+After completing any substantive code change (new file, edited file, refactor):
+
+1. Run `npm run lint -- --fix` to auto-fix ESLint issues and report any that need manual attention.
+2. If the project has a formatter configured (Prettier, etc.), run it too.
+3. Re-read the edited files with the lint tool (`ReadLints`) to confirm no remaining errors.
+4. If lint errors remain after auto-fix, fix them before marking the task complete.
+
+Do not skip this step even for small changes — lint errors compound quickly.
