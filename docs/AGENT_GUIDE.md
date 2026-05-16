@@ -55,6 +55,9 @@ is only the Cursor adapter for that policy.
 - For GitHub issue work launched as `Implement GitHub issue #N.`, the issue body is
   the task contract and the agent may create the issue branch, commit, push, and open
   a PR without repeated permission.
+- After opening an issue-driven PR, run the PR review gate and publish the verdict on
+  the PR before handoff. Prefer an independent reviewer/subagent when the tool permits
+  it; otherwise perform the same review pass in-agent.
 - One issue = one branch = one PR. Parallel issue agents require isolated worktrees
   or checkouts and non-overlapping allowed file sets.
 - Agents never merge PRs unless a human explicitly requests it.

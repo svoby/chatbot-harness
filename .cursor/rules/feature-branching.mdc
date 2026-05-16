@@ -41,7 +41,9 @@ Required issue workflow:
 5. Verify `git status` and `git diff` before committing; stop if unexpected files appear.
 6. Run the verification requested by the issue.
 7. Commit, push, and open a PR against `master` unless the issue specifies another base.
-8. Never merge the PR unless a human explicitly requests it.
+8. Run the PR review gate and publish the review result on the PR before handoff.
+   Prefer `.cursor/agents/code-review.md` for the independent review pass.
+9. Never merge the PR unless a human explicitly requests it.
 
 ## Branch naming
 
@@ -75,11 +77,15 @@ Every issue-driven PR must include:
 - Known risks / follow-ups
 - `Closes #N`
 
+Every issue-driven PR must also have a visible review gate result on the PR before
+the agent calls the work ready for human merge.
+
 ## When work is done
 
 - For ad-hoc work, do not merge, push, open a PR, or rebase from the agent session unless
   the user explicitly asks.
-- For issue work, push and open the PR, then hand off. Humans merge.
+- For issue work, push, open the PR, publish the review gate result, then hand off.
+  Humans merge.
 
 ## Environment and timeout guardrails
 
