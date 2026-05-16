@@ -80,3 +80,23 @@ Every issue-driven PR must include:
 - For ad-hoc work, do not merge, push, open a PR, or rebase from the agent session unless
   the user explicitly asks.
 - For issue work, push and open the PR, then hand off. Humans merge.
+
+## Environment and timeout guardrails
+
+Mirror the operating policy in `AGENTS.md`:
+
+- GitHub Actions Ubuntu is the dependency reproducibility source of truth. CI
+  install remains `npm ci`; do not add `npm install --no-save` CI workarounds.
+- Generate dependency and `package-lock.json` changes from Linux/WSL or an
+  equivalent Linux environment unless explicitly asked otherwise.
+- If sandboxing blocks `.git`, npm cache/log dirs, network, or credentials, make
+  at most one sandbox attempt and one justified fallback attempt before stopping
+  with the exact blocker and needed human command/tool action.
+- Treat launcher/UI permissions as the effective boundary when they are stricter
+  than local config files.
+- Use short timeouts for ordinary inspection commands and interrupt/report hangs.
+  Long waits are reserved for expected installs, downloads, builds, tests, and
+  GitHub/network operations.
+- If WSL lacks GitHub credentials, prefer approved connector/tooling or ask the
+  human to push. Use Windows Git only when repo policy permits it and the same
+  checkout/diff has already been verified.

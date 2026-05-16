@@ -12,7 +12,7 @@ Adding any of these requires a new entry in [DECISIONS.md](DECISIONS.md) and use
 | Vector database / embeddings / RAG | A 20-item structured catalog doesn't need semantic recall; structured filter is sufficient |
 | Multi-turn conversation memory | One request per conversation is enough to demonstrate the pattern |
 | Agent framework (LangChain, LlamaIndex, Vercel AI SDK, etc.) | Adds opacity; deterministic orchestrator teaches the pattern more clearly |
-| Docker / separate backend service | Single Next.js app is the right shape; no need for a sidecar at this scale |
+| Docker / separate backend service | Single Next.js app is the right shape; no need for a sidecar at this scale. Do not introduce Docker only to solve npm optional native package parity. |
 | Monorepo / Turborepo | One package; no shared code across apps |
 | Analytics / A/B / tracking | No users to track |
 | i18n framework | UI in English; prices in CZK as literal data values |
