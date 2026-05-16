@@ -106,3 +106,13 @@ Mirror the operating policy in `AGENTS.md`:
 - If WSL lacks GitHub credentials, prefer approved connector/tooling or ask the
   human to push. Use Windows Git only when repo policy permits it and the same
   checkout/diff has already been verified.
+- `gh` means GitHub CLI. In WSL/Ubuntu local agent sessions, `git` and `gh` are
+  normal tools for repository and PR operations when credentials are configured;
+  MCP/ChatGPT/GitHub connector tooling is an alternative control plane, not a
+  requirement for every shell operation.
+- If `gh` is missing, report the missing tool and point to the official GitHub
+  CLI install docs. If `gh` is installed but unauthenticated, use one focused
+  `gh auth status` / approved `gh auth login` path, then stop at the existing
+  credential gate if still blocked.
+- Keep dependency and CI verification in WSL/Ubuntu even if GitHub credentials
+  work elsewhere.

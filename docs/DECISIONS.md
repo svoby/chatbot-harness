@@ -69,3 +69,15 @@ launcher permissions are treated as the effective boundary; Docker remains defer
 **Consequences:** Future agents should report exact blockers sooner, keep CI on
 plain `npm ci`, avoid CI package-install workarounds, and avoid long credential or
 process-lock troubleshooting loops unless a human explicitly asks for them.
+
+---
+
+## 2026-05-16 — GitHub CLI is normal WSL agent tooling
+
+**Context:** Local WSL agents need a clear GitHub operation path without debating
+`gh`, raw git, MCP, or connector tooling each session.
+**Decision:** Treat `gh` (GitHub CLI) and `git` as standard WSL/Ubuntu local tools
+when credentials are configured; use MCP/ChatGPT/GitHub connector tooling as an
+alternative control plane, not a mandatory replacement.
+**Consequences:** Missing or unauthenticated `gh` should be reported through the
+existing credential stop-gate, while dependency and CI verification stay in WSL.

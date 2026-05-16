@@ -91,6 +91,13 @@ workarounds. Use approved GitHub connector/tooling, ask the human to push, or us
 Windows Git only when repo policy permits it and it is the same checkout with a
 verified diff. Windows and WSL credentials/config are separate in practice.
 
+`gh` means GitHub CLI and is acceptable local tooling in WSL/Ubuntu when
+credentials are configured; MCP/connector tooling is an alternative, not a
+requirement. If `gh` is missing, report it and link the official GitHub CLI
+install docs. If `gh` is unauthenticated, use one focused `gh auth status` /
+approved `gh auth login` path, then stop at the existing credential gate if
+still blocked.
+
 ## 6. Choose merge target
 
 **Default:** merge into the **default trunk** the team uses (`main` or `master`), after fetch:

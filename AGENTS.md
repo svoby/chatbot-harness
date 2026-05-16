@@ -78,6 +78,16 @@ brute-force.
   GitHub credentials, use approved GitHub connector/tooling, ask the human to
   push, or use Windows Git only when repo policy permits it and it is the same
   checkout and verified diff.
+- `gh` means GitHub CLI. In WSL/Ubuntu agent sessions, `git` and `gh` are
+  standard local tools for repository and PR operations when credentials are
+  configured. MCP/ChatGPT/GitHub connector tooling is an alternative control
+  plane, not a reason to avoid `gh` for normal local shell work.
+- If `gh` is missing, report the missing tool and link the official GitHub CLI
+  install docs instead of inventing a different workflow. If `gh` is installed
+  but not authenticated, try one focused `gh auth status` / approved
+  `gh auth login` path, then follow the existing credential stop-gate.
+- Keep dependency and CI verification in WSL/Ubuntu even if GitHub credentials
+  only work from Windows.
 
 Commands should be timed according to their expected cost.
 
