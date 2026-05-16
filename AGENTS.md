@@ -37,6 +37,7 @@ Precedence:
 - `.cursor/skills/` - opt-in workflows (`manual-git-finish`, doc audit before coding).
 - `.cursor/prompts/` - reusable task prompts.
 - `.cursor/agents/` - review agent config.
+- `.codex/skills/pr-review-gate/` - Codex PR review gate used after issue PRs.
 
 ## Product Invariants
 
@@ -137,6 +138,16 @@ Workflow:
    or the issue explicitly adds it.
 8. Commit and push the scoped change.
 9. Open a PR against `master` unless the issue specifies another base.
+10. Run the PR review gate before handing off:
+    - Prefer an independent reviewer/subagent when the current tool and user permissions allow it.
+    - Otherwise perform the same review procedure in the implementation agent.
+    - Review the PR diff against the issue contract, required context, allowed scope,
+      product invariants, and verification output.
+    - Publish the review result visibly on the PR as a review or top-level PR comment.
+    - If the review finds blocker or major issues, fix them and rerun verification before
+      requesting another review pass.
+    - Do not present the PR as ready for human merge until the visible PR review result is
+      `accept` or `accept with small fixes`.
 
 Every issue-driven PR body must include:
 
@@ -146,6 +157,11 @@ Every issue-driven PR body must include:
 - Verification performed, or an explicit explanation if not run
 - Known risks / follow-ups
 - `Closes #N`
+
+Every issue-driven PR must also have a visible review gate comment before handoff. Use
+`.codex/skills/pr-review-gate/SKILL.md` for Codex sessions and mirror its verdict format
+in other tools. If GitHub or tool permissions prevent posting the review, stop and report
+that blocker instead of silently finishing.
 
 ### Parallel Issue Work And Worktrees
 
@@ -164,4 +180,5 @@ Every issue-driven PR body must include:
 - Product invariants remain intact.
 - Required docs are updated when types, boundaries, or decisions change.
 - Verification is run as requested, or the gap is stated clearly.
+- Issue PRs have a visible PR review gate result, or the blocker to posting it is stated.
 - Agents never merge PRs unless a human explicitly requests it.
