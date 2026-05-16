@@ -84,3 +84,13 @@ in `../AGENTS.md`.
   installs, builds, tests, large downloads, and GitHub/network operations.
 - For `node_modules` or native package locks, run one focused diagnostic pass,
   then ask the human to close the likely process or run the named command.
+- In WSL/Ubuntu sessions, `gh` means GitHub CLI and is acceptable standard
+  local tooling alongside `git` for repository and PR operations when
+  credentials are configured. MCP/ChatGPT/GitHub connector tooling remains
+  useful for ChatGPT-side review, issue creation, PR comments, and repo
+  inspection, but it is not mandatory for every local shell operation.
+- If `gh` is missing, report that and point to the official GitHub CLI install
+  docs. If authentication is missing, use one focused `gh auth status` /
+  approved `gh auth login` path, then follow the existing credential stop-gate.
+- Keep dependency and CI verification in WSL/Ubuntu even when GitHub operations
+  happen through approved connector/tooling or an allowed Windows Git fallback.
