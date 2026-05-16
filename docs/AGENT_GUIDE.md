@@ -63,3 +63,21 @@ is only the Cursor adapter for that policy.
 
 If a decision is ambiguous, ask the user rather than guessing. Prefer a short
 clarifying question over an implementation that needs to be reverted.
+
+## Environment Boundaries
+
+Follow the full environment, sandbox, timeout, credential, and process-lock policy
+in `../AGENTS.md`.
+
+- Treat GitHub Actions Ubuntu as the dependency reproducibility source of truth.
+  CI install stays `npm ci`; do not patch CI with `npm install --no-save`.
+- Generate lockfile/dependency changes from Linux/WSL or equivalent Linux unless
+  explicitly instructed otherwise.
+- After one failed sandbox attempt and one justified fallback attempt, stop and
+  report the blocker plus the next human command/tool action needed.
+- Launcher/UI permissions are the effective boundary when they are stricter than
+  local config files.
+- Use short timeouts for ordinary inspection commands; reserve long waits for
+  installs, builds, tests, large downloads, and GitHub/network operations.
+- For `node_modules` or native package locks, run one focused diagnostic pass,
+  then ask the human to close the likely process or run the named command.

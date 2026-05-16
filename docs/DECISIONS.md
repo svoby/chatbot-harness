@@ -54,3 +54,18 @@ Format: `## YYYY-MM-DD — Title` then context / decision / consequences.
 **Context:** Preventing accidental client-side imports of server modules.
 **Decision:** All `server/**` files carry `import "server-only"` at the top. Next.js build fails fast on violations.
 **Consequences:** Explicit boundary enforcement. Requires `server-only` npm package.
+
+---
+
+## 2026-05-16 — Agent environment and retry boundaries
+
+**Context:** CI baseline work exposed repeated friction across Linux/WSL, Windows Git
+credentials, sandbox permissions, npm cache/log writes, native package locks, and
+ordinary commands hanging longer than their purpose justified.
+**Decision:** GitHub Actions Ubuntu is the dependency reproducibility source of truth;
+lockfile/dependency changes should come from Linux/WSL or equivalent Linux; agents
+must stop after one failed sandbox attempt and one justified fallback attempt; UI
+launcher permissions are treated as the effective boundary; Docker remains deferred.
+**Consequences:** Future agents should report exact blockers sooner, keep CI on
+plain `npm ci`, avoid CI package-install workarounds, and avoid long credential or
+process-lock troubleshooting loops unless a human explicitly asks for them.

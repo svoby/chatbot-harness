@@ -50,6 +50,51 @@ Additional invariants:
 - Do not add databases, vector stores, auth, queues, agent frameworks, or deployment
   infrastructure unless explicitly approved and recorded in `docs/DECISIONS.md`.
 
+## Agent Environment Policy
+
+GitHub Actions Ubuntu is the dependency reproducibility source of truth.
+
+- CI install must remain `npm ci` only. Do not add `npm install --no-save` or
+  similar package workarounds in CI to patch platform-pruned lockfiles.
+- Generate dependency and `package-lock.json` changes from Linux/WSL or an
+  equivalent Linux environment. Windows agents may edit app code and docs, but
+  should not regenerate lockfiles unless explicitly asked.
+- Docker remains deferred; do not introduce Docker only to solve npm optional
+  native package parity.
+
+Sandbox and credential boundaries are real working constraints, not puzzles to
+brute-force.
+
+- If sandboxing blocks writes to `.git`, npm cache/log dirs, network, or
+  credentials, try at most one failed sandbox attempt and one clearly justified
+  fallback attempt. Then stop and report the exact blocker plus the next human
+  command or tool approval needed.
+- Launcher or UI permissions can override local config files such as
+  `config.toml`. If the UI is read-only or no-network, treat that as the
+  effective boundary until the human changes it; do not keep editing config
+  files hoping to bypass it.
+- Windows and WSL Git credentials/config are separate in practice. If WSL lacks
+  GitHub credentials, use approved GitHub connector/tooling, ask the human to
+  push, or use Windows Git only when repo policy permits it and it is the same
+  checkout and verified diff.
+
+Commands should be timed according to their expected cost.
+
+- Short inspection commands such as `git status`, `git diff`, `git branch`,
+  `git log -1`, `node --version`, `npm --version`, file reads, searches, and
+  process checks should use short timeouts or be interrupted quickly if they
+  hang.
+- Long-running commands are acceptable only when expected: `npm ci`, dependency
+  downloads, `npm run build`, test suites, large installs, and GitHub/network
+  operations.
+- If an ordinary command appears hung, stop it and report; do not wait several
+  minutes silently.
+- If `node_modules` or native optional packages are locked, assume a local
+  process issue first. Run at most one focused lock/process diagnostic pass; if
+  still blocked, ask the human to close the likely process/editor/terminal or
+  run the named command manually. Do not repeatedly enumerate, kill, or inspect
+  processes unless explicitly asked.
+
 ## Git Workflow
 
 These rules are agent-agnostic. Codex, Cursor, Claude, and other coding agents must

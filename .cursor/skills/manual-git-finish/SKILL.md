@@ -86,6 +86,11 @@ git push -u origin HEAD
 
 If the branch exists remotely, a plain `git push` may suffice.
 
+If WSL lacks GitHub credentials, do not spend the session trying credential
+workarounds. Use approved GitHub connector/tooling, ask the human to push, or use
+Windows Git only when repo policy permits it and it is the same checkout with a
+verified diff. Windows and WSL credentials/config are separate in practice.
+
 ## 6. Choose merge target
 
 **Default:** merge into the **default trunk** the team uses (`main` or `master`), after fetch:
