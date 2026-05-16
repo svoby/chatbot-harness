@@ -85,7 +85,8 @@ Two adapters exist. Everything else is inlined.
   Orchestrator imports the interface; implementation selected by `LLM_MODE` env var.
 
 - **`searchProducts`** (soft boundary) — single function, typed signature.
-  Internally reads `catalog.ts`. Future M8 swaps its body for Prisma; signature unchanged.
+  Internally reads `catalog.ts`. A future database milestone swaps its body for
+  DB-backed product retrieval; signature unchanged.
 
 Adapters are **not** added for: ranking strategy, prompt templates, telemetry, DI.
 Rule: introduce an adapter only when there are 2 real implementations or 1 real + 1 test double.

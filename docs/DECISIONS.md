@@ -81,3 +81,29 @@ when credentials are configured; use MCP/ChatGPT/GitHub connector tooling as an
 alternative control plane, not a mandatory replacement.
 **Consequences:** Missing or unauthenticated `gh` should be reported through the
 existing credential stop-gate, while dependency and CI verification stay in WSL.
+
+---
+
+## 2026-05-16 — MVP production path uses managed services
+
+**Context:** The project needs a concrete path from local harness to deployable
+product assistant without turning into a platform or infrastructure exercise.
+**Decision:** Keep GitHub as source of truth, use a small Next.js deployment
+shape such as Vercel, use cloud model APIs first, and use managed Postgres as
+the database direction once the JSON catalog is outgrown.
+**Consequences:** No infrastructure is implemented by this decision. Mock/local
+mode remains required for development and CI; provider and database credentials
+must stay server-side; Docker and self-hosted database ops remain deferred.
+
+---
+
+## 2026-05-16 — Product retrieval precedes RAG
+
+**Context:** The assistant's core invariant is that the LLM never invents
+product facts, and the current catalog retrieval is deterministic.
+**Decision:** Move from local JSON to DB-backed deterministic product retrieval
+before adding document/FAQ RAG, embeddings, vector search, orders, or customer
+context.
+**Consequences:** Product facts continue to come from product records. Source
+documents and retrieval chunks are introduced only for non-product facts after
+product DB retrieval is stable.

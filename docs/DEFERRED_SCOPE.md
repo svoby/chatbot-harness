@@ -8,8 +8,12 @@ Adding any of these requires a new entry in [DECISIONS.md](DECISIONS.md) and use
 | Auth / accounts / sessions | Out of scope for a learning prototype; adds friction with no product value at this stage |
 | Basket / checkout / payments | Not a commerce platform; this is a recommendation assistant |
 | Rate limiting | No auth, no production traffic; revisit at M7 (Vercel deploy) |
-| Real database (SQLite/Postgres/Prisma) | 10–20 item catalog fits in a JSON file; no query complexity to justify DB. See M8. |
-| Vector database / embeddings / RAG | A 20-item structured catalog doesn't need semantic recall; structured filter is sufficient |
+| Real database implementation | Current 10–20 item catalog fits in JSON. The MVP direction is managed Postgres, but implementation waits for an explicit database milestone. See [MVP_ARCHITECTURE.md](MVP_ARCHITECTURE.md). |
+| Vector database / embeddings / RAG | Product retrieval must move to stable structured DB search before document/FAQ RAG or embeddings are introduced |
+| Self-hosted database operations | Managed Postgres is the MVP direction; avoid learning database ops, Dockerized parity, or self-hosting during the MVP |
+| Document/FAQ ingestion pipeline | Add `sources` / `source_documents` only after product retrieval is DB-backed and stable |
+| Orders / customer context | Optional demo layer only; defer until product retrieval and source boundaries are reliable |
+| Local model optimization | Cloud model API is the MVP path; keep mock mode but do not spend MVP cycles tuning local models |
 | Multi-turn conversation memory | One request per conversation is enough to demonstrate the pattern |
 | Agent framework (LangChain, LlamaIndex, Vercel AI SDK, etc.) | Adds opacity; deterministic orchestrator teaches the pattern more clearly |
 | Docker / separate backend service | Single Next.js app is the right shape; no need for a sidecar at this scale. Do not introduce Docker only to solve npm optional native package parity. |
