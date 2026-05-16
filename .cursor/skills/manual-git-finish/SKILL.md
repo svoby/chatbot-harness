@@ -14,6 +14,9 @@ Use this skill when the **user explicitly** wants to land work: remove known-saf
 
 This is a **manual / human-approved** workflow. It does **not** replace day-to-day agent rules: automated sessions should still follow `.cursor/rules/feature-branching.mdc` (no surprise merges) unless the user is clearly running **this** finish flow.
 
+For GitHub issue work launched as `Implement GitHub issue #N.`, follow the issue workflow
+in `AGENTS.md` instead. This skill is for explicit human-driven wrap-up outside that flow.
+
 ## 1. Re-read task and repo instructions
 
 Before changing git state:

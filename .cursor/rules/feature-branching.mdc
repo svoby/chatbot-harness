@@ -1,36 +1,82 @@
 ---
-description: Git workflow — branch and commit policy for the agent
+description: Git workflow - branch, commit, PR, and worktree policy for agents
 alwaysApply: true
 ---
 
 # Git workflow
 
-## Branch policy — do NOT switch branches automatically
+`AGENTS.md` is the root source of truth for repo safety and workflow. This rule is
+the Cursor adapter for that policy.
 
-The agent **must never** create, checkout, or switch branches on its own.
-Work on whatever branch is currently active. If a branch change is needed, ask the user explicitly.
+## Ad-hoc work - conservative by default
 
-But at the very beginning of the session, the agent should create a new branch for the current task.
+For non-issue work, the agent must not create, checkout, or switch branches on its own.
+Work on whatever branch is currently active. If a branch change is needed, ask the user
+explicitly.
 
-Branch name convention:
-- `feat/<task-name>` - for new features
-- `fix/<task-name>` - for bug fixes
-- `chore/<task-name>` - for chores and refactors
-- `test/<task-name>` - for test-only changes
+The agent must not run `git add`, stage files, commit, push, open a PR, merge, or rebase
+unless the user explicitly asks.
 
-## Commit policy — never commit; do not stage unless asked
+Optionally, when wrapping up ad-hoc work, write the intended commit message to
+`.git/COMMIT_EDITMSG` so the user can paste or adjust it in Source Control.
 
-The agent **must never run `git commit`**. Do **not** run `git add` or otherwise stage changes unless the user explicitly asks.
+## GitHub issue work - built-in exception
 
-Optionally, when wrapping up a task, write the intended commit message to `.git/COMMIT_EDITMSG` so the user can paste or adjust it in Source Control.
+When the user launches work with:
 
-Commit message prefix conventions (for `COMMIT_EDITMSG`):
+```text
+Implement GitHub issue #N.
+```
 
-- `feat: …` — new functionality
-- `fix: …` — bug fix
-- `chore: …` — tooling, refactors, non-functional changes
-- `test: …` — test-only changes
+fetch the issue and treat its body as the task contract. This issue-driven workflow may
+create the issue branch, commit, push, and open a PR without the user repeating those
+permissions.
+
+Required issue workflow:
+
+1. Read `AGENTS.md`, fetch the issue, and verify it against current `master`.
+2. Read every file listed in the issue's Required context section before editing.
+3. Create the branch named by the issue. If no branch is named, use `issue-N-<short-slug>`.
+4. Edit only files and behavior authorized by the issue.
+5. Verify `git status` and `git diff` before committing; stop if unexpected files appear.
+6. Run the verification requested by the issue.
+7. Commit, push, and open a PR against `master` unless the issue specifies another base.
+8. Never merge the PR unless a human explicitly requests it.
+
+## Branch naming
+
+Use the issue-specified branch name for issue work. If there is no issue-specified branch:
+
+- `feat/<task-name>` for new features.
+- `fix/<task-name>` for bug fixes.
+- `chore/<task-name>` for tooling, documentation, and refactors.
+- `test/<task-name>` for test-only changes.
+- `issue-N-<short-slug>` for GitHub issue work without a named branch.
+
+## Parallel issue agents and worktrees
+
+- One issue = one branch = one PR.
+- For parallel issue agents, also use one isolated worktree or checkout per issue.
+- Never let two agents share the same mutable working directory.
+- Run parallel issue agents only when their allowed file sets do not overlap.
+- Before editing issue work, check current branch/status and open PRs for overlap with
+  the issue's allowed files.
+- For a single issue in the current checkout, creating the issue branch is enough;
+  worktrees are required only for parallel work or when the launcher environment provides them.
+
+## PR body requirements
+
+Every issue-driven PR must include:
+
+- Summary
+- Changed files
+- Context read
+- Verification performed, or an explicit explanation if not run
+- Known risks / follow-ups
+- `Closes #N`
 
 ## When work is done
 
-- Do **not** merge, push, or rebase from the agent session.
+- For ad-hoc work, do not merge, push, open a PR, or rebase from the agent session unless
+  the user explicitly asks.
+- For issue work, push and open the PR, then hand off. Humans merge.
