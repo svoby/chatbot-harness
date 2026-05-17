@@ -5,6 +5,12 @@ import type { ChatRequest, ChatResponse } from "@/shared/types/chat";
 import MessageList, { type Message } from "./MessageList";
 import FollowUpChips from "./FollowUpChips";
 
+const EXAMPLE_PROMPTS = [
+  "Oily sensitive skin SPF under 500 CZK",
+  "Fragrance-free moisturizer for dry skin",
+  "Serum for acne-prone skin under 400 CZK",
+];
+
 export default function ChatPanel() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -81,11 +87,7 @@ export default function ChatPanel() {
               Example: &ldquo;I have oily sensitive skin and want SPF under 500 CZK, ideally fragrance-free.&rdquo;
             </p>
             <div className="flex flex-col gap-2 mt-1">
-              {[
-                "Oily sensitive skin SPF under 500 CZK",
-                "Fragrance-free moisturizer for dry skin",
-                "Serum for acne-prone skin under 400 CZK",
-              ].map((prompt) => (
+              {EXAMPLE_PROMPTS.map((prompt) => (
                 <button
                   key={prompt}
                   type="button"
