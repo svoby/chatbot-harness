@@ -6,6 +6,11 @@ description: Run after opening an issue-driven PR in this repo. Review the final
 # PR Review Gate
 
 Use this after an issue-driven implementation PR is opened and before final handoff.
+The implementation agent must initiate this gate after opening the PR. In Codex
+sessions, prefer an independent subagent/reviewer when the current tool and user
+permissions allow it; the implementation agent should post the independent verdict
+visibly on the PR. In-agent review is only a fallback, and the PR comment must state
+that independent review was unavailable.
 
 ## Required inputs
 
@@ -33,6 +38,8 @@ Use this after an issue-driven implementation PR is opened and before final hand
 5. Publish a visible PR review result:
    - Prefer a formal GitHub PR review if the tool supports it.
    - Otherwise post a top-level PR comment.
+   - State whether the verdict came from an independent reviewer/subagent or from
+     the implementation agent fallback.
 6. If findings include Blocker or Major issues, return to implementation, fix them, rerun requested verification, push, and run this gate again.
 
 ## PR comment format

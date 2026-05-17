@@ -149,8 +149,12 @@ Workflow:
 8. Commit and push the scoped change.
 9. Open a PR against `master` unless the issue specifies another base.
 10. Run the PR review gate before handing off:
-    - Prefer an independent reviewer/subagent when the current tool and user permissions allow it.
-    - Otherwise perform the same review procedure in the implementation agent.
+    - The implementation agent must initiate this step after opening the PR.
+    - Use an independent reviewer/subagent when the current tool and user
+      permissions allow it. This is the default path for issue-driven PRs.
+    - Otherwise perform the same review procedure in the implementation agent
+      and state in the visible PR comment that independent review was not
+      available.
     - Review the PR diff against the issue contract, required context, allowed scope,
       product invariants, and verification output.
     - Publish the review result visibly on the PR as a review or top-level PR comment.
@@ -170,8 +174,9 @@ Every issue-driven PR body must include:
 
 Every issue-driven PR must also have a visible review gate comment before handoff. Use
 `.codex/skills/pr-review-gate/SKILL.md` for Codex sessions and mirror its verdict format
-in other tools. If GitHub or tool permissions prevent posting the review, stop and report
-that blocker instead of silently finishing.
+in other tools. If the tool supports a separate review agent, the implementation agent
+must run it before posting the review result. If GitHub or tool permissions prevent
+posting the review, stop and report that blocker instead of silently finishing.
 
 ### Parallel Issue Work And Worktrees
 

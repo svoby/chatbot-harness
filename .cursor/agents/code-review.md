@@ -14,6 +14,8 @@ Your job is to find risks (security, correctness, regressions), responsibility l
 
 For issue-driven PRs, your result must be published visibly on the PR as a review or
 top-level PR comment before the implementation agent hands the PR to a human for merge.
+The implementation agent owns invoking this reviewer after the PR is opened; this
+reviewer is the preferred independent pass for Cursor sessions.
 
 Project values:
 
