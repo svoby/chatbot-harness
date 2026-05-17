@@ -120,19 +120,6 @@ export default function ChatPanel() {
         <FollowUpChips chips={lastFollowUps} onSelect={handleChip} />
       )}
 
-      {/* Debug toggle */}
-      <div className="flex justify-end mt-2">
-        <label className="flex items-center gap-1.5 text-xs text-gray-400 cursor-pointer select-none">
-          <input
-            type="checkbox"
-            checked={debugMode}
-            onChange={(e) => setDebugMode(e.target.checked)}
-            className="rounded accent-amber-500"
-          />
-          Debug mode
-        </label>
-      </div>
-
       {/* Input */}
       <form onSubmit={handleSubmit} className="mt-2 flex gap-2">
         <input
@@ -151,6 +138,19 @@ export default function ChatPanel() {
           Send
         </button>
       </form>
+
+      {/* Debug toggle */}
+      <div className="flex justify-end mt-1">
+        <label className="flex items-center gap-1.5 text-xs text-gray-400 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={debugMode}
+            onChange={(e) => setDebugMode(e.target.checked)}
+            className="rounded accent-amber-500"
+          />
+          Debug mode
+        </label>
+      </div>
     </div>
   );
 }
