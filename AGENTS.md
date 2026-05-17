@@ -39,6 +39,17 @@ Precedence:
 - `.cursor/agents/` - review agent config.
 - `.codex/skills/pr-review-gate/` - Codex PR review gate used after issue PRs.
 
+Docs ownership rule:
+
+- Do not create new persistent docs unless the issue explicitly asks for it.
+- When updating docs, update the owning document only, prefer links over
+  restating, and do not duplicate architecture, API contracts, deferred scope,
+  decisions, or implementation sequencing.
+- If a change appears to require reorganizing docs ownership, stop and propose
+  a dedicated docs cleanup issue.
+- Reviewers must flag duplicated, stale, or conflicting docs as review
+  findings.
+
 ## Product Invariants
 
 > The LLM is never the source of product facts.

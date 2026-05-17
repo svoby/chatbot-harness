@@ -1,8 +1,11 @@
 # MVP Implementation Plan
 
-This is an issue-writing plan, not implementation approval. Create follow-up
-issues from these contracts one at a time, keeping each issue scoped to one
-runnable milestone.
+This is an issue-writing plan, not an implementation contract. Do not
+implement directly from this plan. Use it to decide which GitHub issue to
+create next and which dependencies to respect. Concrete implementation work
+must happen through an approved GitHub issue with explicit goal, allowed
+changes, forbidden changes, acceptance criteria, verification, branch name, and
+PR title.
 
 ## Current Baseline
 

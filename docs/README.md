@@ -10,7 +10,7 @@ Every AI agent and new contributor should read this file first.
 | [PROJECT_BRIEF.md](PROJECT_BRIEF.md) | Product intent, architectural invariant, non-goals | Before any feature work |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Layers, client/server boundary, folder layout, orchestration flow | Before changes that cross layers |
 | [MVP_ARCHITECTURE.md](MVP_ARCHITECTURE.md) | Production-shaped MVP stack, data plan, retrieval/RAG boundaries | Before adding deploy, database, or RAG infrastructure |
-| [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) | Current issue-writing plan for the next MVP implementation work | Before creating deploy, database, retrieval, or RAG implementation issues |
+| [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) | Current issue-writing plan and dependency order for MVP follow-up work | Before creating follow-up implementation issues; do not implement directly from it |
 | [API_CONTRACTS.md](API_CONTRACTS.md) | `ChatRequest`/`ChatResponse`/`Product`/intent types and their semantics | Before changing any of those types |
 | [DECISIONS.md](DECISIONS.md) | Append-only mini-ADRs (date, context, decision, consequences) | When making any non-trivial judgment call |
 | [DEFERRED_SCOPE.md](DEFERRED_SCOPE.md) | Things explicitly chosen not to build yet, and why | When tempted to add infra, auth, DB, RAG, etc. |

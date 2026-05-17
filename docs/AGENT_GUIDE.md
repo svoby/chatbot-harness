@@ -9,14 +9,15 @@ this file summarizes project-specific operating rules.
 1. Read [docs/README.md](README.md) - the doc map and update protocol.
 2. Read [docs/PROJECT_BRIEF.md](PROJECT_BRIEF.md) - the invariant and non-goals.
 3. Read [docs/ARCHITECTURE.md](ARCHITECTURE.md) before any change that crosses layers.
-4. Read [docs/IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) before creating
-   implementation issues or starting MVP follow-up work.
+4. Read [docs/IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) only to
+   understand sequencing or create the next GitHub issue. For implementation,
+   follow the GitHub issue body as the task contract.
 
 ## Core rules
 
 ### Stay in scope
-- Work on one approved issue or implementation milestone at a time. Do not
-  pre-implement later work from the plan.
+- Work on one approved issue at a time. Do not implement directly from the
+  implementation plan or pre-implement later work from it.
 - If scope needs to expand, stop and ask the user.
 
 ### Keep diffs small
