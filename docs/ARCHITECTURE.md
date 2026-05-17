@@ -31,6 +31,8 @@
 │  server/llm/index.ts     ← interface            │
 │  server/llm/mock.ts      ← deterministic mode   │
 │  server/llm/provider.ts  ← real provider mode   │
+│  server/db/client.ts     ← Postgres pool        │
+│  server/db/migrations/*  ← SQL schema history   │
 │  server/data/catalog.ts  ← local JSON           │
 │  server/data/catalog.json                       │
 └─────────────────────────────────────────────────┘
@@ -59,6 +61,7 @@ chatbot/
 ├── server/
 │   ├── assistant/           Orchestrator, intent, explain
 │   ├── tools/               searchProducts (the product fact source)
+│   ├── db/                  server-only Postgres connection + SQL migrations
 │   ├── data/                catalog.ts + catalog.json
 │   └── llm/                 LLMAdapter interface + implementations
 ├── shared/types/            ChatRequest, ChatResponse, Product, intent types

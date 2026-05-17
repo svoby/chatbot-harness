@@ -61,8 +61,10 @@ per environment in the Vercel dashboard.
 | `LLM_MODE` | No | Server-side | `mock` or `real` | Missing or any value other than `real` behaves as `mock`. |
 | `OPENAI_MODEL` | No | Server-side | OpenAI model ID | Optional real-provider model override. Defaults to `gpt-4o-mini`; `LLM_MODEL` is also supported as a fallback alias. Never expose through `NEXT_PUBLIC_*`. |
 | `OPENAI_API_KEY` | Only when `LLM_MODE=real` | Server-side secret | OpenAI API key | Never expose through `NEXT_PUBLIC_*`. |
+| `DATABASE_URL` | No (required only for DB/migration tasks) | Server-side secret | Postgres connection URL | Managed Postgres connection string for server-only DB access. Keep secret; never use `NEXT_PUBLIC_*`. |
 
-No environment variables are required for the default mock deployment path.
+No environment variables are required for the default mock deployment path, and
+the app currently keeps product retrieval on the local JSON catalog.
 Set `LLM_MODE=real` and `OPENAI_API_KEY` only when intentionally testing or
 running the real provider adapter. Set `OPENAI_MODEL` only when intentionally
 overriding the default real-provider model.
@@ -81,6 +83,18 @@ Recommended deployment values:
 Mock mode is intentionally valid for preview deployments, production demos
 without credentials, local development, and CI. It must continue to work with no
 provider key.
+
+When preparing database infrastructure, apply the initial schema with:
+
+```bash
+DATABASE_URL=postgres://... npm run db:migrate
+```
+
+This migration command is server-side infrastructure setup only; it does not
+switch product retrieval away from the local catalog.
+It currently applies sorted SQL files from `server/db/migrations`; rerunning
+already-applied files can fail until a dedicated migration tracking step is
+introduced.
 
 ## Preview Expectations
 
