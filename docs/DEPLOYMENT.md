@@ -59,11 +59,13 @@ per environment in the Vercel dashboard.
 | Variable | Required | Scope | Value | Notes |
 |---|---:|---|---|---|
 | `LLM_MODE` | No | Server-side | `mock` or `real` | Missing or any value other than `real` behaves as `mock`. |
+| `OPENAI_MODEL` | No | Server-side | OpenAI model ID | Optional real-provider model override. Defaults to `gpt-4o-mini`; `LLM_MODEL` is also supported as a fallback alias. Never expose through `NEXT_PUBLIC_*`. |
 | `OPENAI_API_KEY` | Only when `LLM_MODE=real` | Server-side secret | OpenAI API key | Never expose through `NEXT_PUBLIC_*`. |
 
 No environment variables are required for the default mock deployment path.
 Set `LLM_MODE=real` and `OPENAI_API_KEY` only when intentionally testing or
-running the real provider adapter.
+running the real provider adapter. Set `OPENAI_MODEL` only when intentionally
+overriding the default real-provider model.
 
 Recommended deployment values:
 
@@ -175,7 +177,7 @@ Before handing the app to a deployment owner, confirm:
 - Vercel install command remains `npm ci`.
 - Vercel build command is `npm run build`.
 - Server-side env vars are set for each Vercel environment.
-- No provider or database secret uses a `NEXT_PUBLIC_*` name.
+- No provider/database secret or LLM provider config uses a `NEXT_PUBLIC_*` name.
 - Mock/no-key local mode has been smoke checked.
 - Preview or production URL has passed the API smoke check.
 - No package or lockfile changes were introduced for deployment readiness.

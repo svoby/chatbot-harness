@@ -10,6 +10,7 @@ import type { LLMAdapter } from "./index";
 import type { ExtractedIntent, ProductSearchConstraints } from "@/shared/types/intent";
 import type { ProductRecommendation } from "@/shared/types/product";
 import { extractIntent } from "@/server/assistant/intent";
+import { getOpenAIModel } from "./config";
 
 function getClient(): OpenAI {
   const apiKey = process.env.OPENAI_API_KEY;
@@ -50,7 +51,7 @@ Rules:
 async function extractIntentViaLLM(text: string): Promise<ExtractedIntent> {
   const client = getClient();
   const response = await client.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: getOpenAIModel(),
     response_format: { type: "json_object" },
     messages: [
       { role: "system", content: INTENT_SYSTEM_PROMPT },
@@ -132,7 +133,7 @@ Matched products:
 ${productsJson}`;
 
   const response = await client.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: getOpenAIModel(),
     response_format: { type: "json_object" },
     messages: [
       { role: "system", content: EXPLAIN_SYSTEM_PROMPT },
