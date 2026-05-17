@@ -17,12 +17,13 @@ PR title.
 - MVP architecture direction is Vercel-shaped deployment, cloud model API,
   managed Postgres, then optional non-product RAG.
 
-## Next Milestone
+## Current Position
 
-The next implementable milestone is M7: deployable web app. It should connect
-the existing app to a deployment target and configure server-side environment
-variables without adding database, RAG, auth, queues, Docker, or product-code
-architecture changes.
+Steps 1–3 (provider boundary, deploy, and environment configuration) are
+completed baseline. The dependency order is currently before step 4.
+
+Current executable issue: #29 — Add managed Postgres foundation without
+changing product retrieval.
 
 ## Dependency Order
 
@@ -46,8 +47,8 @@ wait for stable DB-backed product retrieval.
 
 ## Parallelization Rules
 
-- Safe in parallel after M7 is created: deployment docs/smoke checklist and
-  provider-boundary audit, if they touch only docs/config and server env docs.
+- Docs-only and provider-boundary audit issues may run in parallel with
+  implementation issues if they touch only docs/config and server env docs.
 - Sequential: deploy target selection before env smoke checks; database choice
   before schema/migrations; schema before seed; seed before DB-backed retrieval;
   DB-backed retrieval before RAG.
@@ -55,6 +56,8 @@ wait for stable DB-backed product retrieval.
   they use separate worktrees and non-overlapping files.
 
 ## Implementation Issue Sequence
+
+### Completed Baseline (steps 1–3)
 
 ### 1. Deployable Web App
 
@@ -81,7 +84,9 @@ Verification: `npm run lint`, `npm run build`, mock mode with no
 `OPENAI_API_KEY`, real mode smoke check when credentials are available, and
 server/client boundary review.
 
-### 3. Managed Postgres Foundation
+### Pending
+
+### 3. Managed Postgres Foundation (current — issue #29)
 
 Allowed changes: selected managed Postgres client/setup, schema or migrations
 for product records, server-only connection code, docs, and decision updates.
