@@ -80,6 +80,23 @@ export default function ChatPanel() {
             <p className="text-xs">
               Example: &ldquo;I have oily sensitive skin and want SPF under 500 CZK, ideally fragrance-free.&rdquo;
             </p>
+            <div className="flex flex-col gap-2 mt-1">
+              {[
+                "Oily sensitive skin SPF under 500 CZK",
+                "Fragrance-free moisturizer for dry skin",
+                "Serum for acne-prone skin under 400 CZK",
+              ].map((prompt) => (
+                <button
+                  key={prompt}
+                  type="button"
+                  onClick={() => send(prompt)}
+                  disabled={loading}
+                  className="rounded-xl border border-gray-200 bg-white px-4 py-2 text-xs text-gray-500 hover:border-indigo-300 hover:text-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
           </div>
         ) : (
           <>
