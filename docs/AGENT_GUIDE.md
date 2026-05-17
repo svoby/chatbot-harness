@@ -9,12 +9,14 @@ this file summarizes project-specific operating rules.
 1. Read [docs/README.md](README.md) - the doc map and update protocol.
 2. Read [docs/PROJECT_BRIEF.md](PROJECT_BRIEF.md) - the invariant and non-goals.
 3. Read [docs/ARCHITECTURE.md](ARCHITECTURE.md) before any change that crosses layers.
-4. Read [docs/ROADMAP.md](ROADMAP.md) to know which milestone you're working on.
+4. Read [docs/IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) before creating
+   implementation issues or starting MVP follow-up work.
 
 ## Core rules
 
 ### Stay in scope
-- Work on **one milestone at a time**. Do not pre-implement future milestones.
+- Work on one approved issue or implementation milestone at a time. Do not
+  pre-implement later work from the plan.
 - If scope needs to expand, stop and ask the user.
 
 ### Keep diffs small
@@ -60,6 +62,9 @@ is only the Cursor adapter for that policy.
   it; otherwise perform the same review pass in-agent.
 - One issue = one branch = one PR. Parallel issue agents require isolated worktrees
   or checkouts and non-overlapping allowed file sets.
+- Worktrees are temporary isolation for active issue work. Once the PR is merged
+  and the checkout is clean, remove the worktree; prune stale worktree metadata
+  when `git worktree list` points at missing paths.
 - Agents never merge PRs unless a human explicitly requests it.
 
 ## Escalation

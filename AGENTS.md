@@ -26,7 +26,7 @@ Precedence:
 
 ## Where To Look
 
-- `docs/` - project memory: brief, architecture, slice definition, API contracts, roadmap, decisions.
+- `docs/` - project memory: brief, architecture, API contracts, current implementation plan, decisions.
 - `.cursor/rules/` - always-on and file-scoped adapters:
   - `project-memory.mdc` - doc reading and update protocol.
   - `assistant-grounding.mdc` - LLM grounding invariant (`server/**`, `app/api/**`).
@@ -183,6 +183,12 @@ that blocker instead of silently finishing.
   allowed files.
 - For a single issue in the current checkout, creating the issue branch is enough;
   worktrees are required only for parallel work or when the launcher environment provides them.
+- Worktrees are temporary isolation, not project history. After the PR is merged
+  and the worktree is clean, remove the worktree; keep or delete the branch
+  separately according to normal branch cleanup policy.
+- If `git worktree list` shows a path that no longer exists, run
+  `git worktree prune` after confirming no active agent/editor is using that
+  checkout.
 
 ## Done Criteria
 

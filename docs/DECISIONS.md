@@ -107,3 +107,16 @@ context.
 **Consequences:** Product facts continue to come from product records. Source
 documents and retrieval chunks are introduced only for non-product facts after
 product DB retrieval is stable.
+
+---
+
+## 2026-05-17 — Docs keep current truth, not bootstrap history
+
+**Context:** Bootstrap-era roadmap and vertical-slice docs were being read next
+to the current MVP implementation issue plan, creating duplicate sources for
+what to build next.
+**Decision:** Keep `docs/IMPLEMENTATION_PLAN.md` as the current issue-writing
+plan, keep stable reference docs, and delete historical bootstrap roadmap/slice
+documents instead of archiving them.
+**Consequences:** Agents should use stable docs for product and architecture
+truth, then use the implementation plan for follow-up issue creation.

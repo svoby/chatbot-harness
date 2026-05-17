@@ -6,7 +6,7 @@ runnable milestone.
 
 ## Current Baseline
 
-- M0-M6 are complete: local Next.js harness, deterministic product retrieval,
+- The current app has a local Next.js harness, deterministic product retrieval,
   grounded explanations, real/mock LLM adapter, and debug panel.
 - `POST /api/chat` is the browser/backend contract.
 - Product facts come from deterministic retrieval before the LLM explains them.
@@ -56,7 +56,7 @@ wait for stable DB-backed product retrieval.
 ### 1. Deployable Web App
 
 Allowed changes: deployment configuration/docs required by the selected target,
-root README production link after deployment, and server-side env documentation.
+production URL documentation after deployment, and server-side env documentation.
 
 Forbidden changes: product retrieval, database code, RAG, auth, package
 workarounds, lockfile churn not required by the deploy target, and any
