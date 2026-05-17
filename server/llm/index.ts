@@ -6,12 +6,21 @@ import "server-only";
 import type { ExtractedIntent } from "@/shared/types/intent";
 import type { ProductRecommendation } from "@/shared/types/product";
 
+export type LLMStageProvider = "openai" | "mock" | "deterministic-fallback";
+
+export interface LLMStageResult<T> {
+  value: T;
+  provider: LLMStageProvider;
+  fallbackUsed: boolean;
+  model?: string;
+}
+
 export interface LLMAdapter {
-  extractIntent(text: string): Promise<ExtractedIntent>;
+  extractIntent(text: string): Promise<LLMStageResult<ExtractedIntent>>;
   explain(input: {
     intent: ExtractedIntent;
     products: ProductRecommendation[];
-  }): Promise<{ message: string; followUps: string[] }>;
+  }): Promise<LLMStageResult<{ message: string; followUps: string[] }>>;
 }
 
 export type LLMMode = "mock" | "real";

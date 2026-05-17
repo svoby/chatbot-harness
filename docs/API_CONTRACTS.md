@@ -34,6 +34,7 @@ interface ChatResponse {
     intent: ExtractedIntent;
     tool: ToolDebug;
     llmMode: "mock" | "real";
+    llm: LLMDebug;
   };
 }
 ```
@@ -112,6 +113,29 @@ interface ToolDebug {
   rejectedCount:    number;   // products that did not match
 }
 ```
+
+---
+
+## LLMDebug
+
+```typescript
+type LLMDebugProvider =
+  | "openai"
+  | "mock"
+  | "deterministic-fallback"
+  | "none";
+
+interface LLMDebug {
+  intentProvider:      LLMDebugProvider;
+  explanationProvider: LLMDebugProvider;
+  shortCircuited:      boolean;
+  fallbackUsed:        boolean;
+  model?:              string;
+}
+```
+
+`debug.llm` reports provider/runtime state only. It must not include raw prompts,
+provider responses, API keys, request headers, or other secrets.
 
 ---
 

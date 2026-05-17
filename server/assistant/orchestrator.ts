@@ -3,18 +3,40 @@ import "server-only";
 // Orchestrates: intent extraction → search → explain → structured response.
 // See docs/ARCHITECTURE.md — Orchestration Flow.
 
-import type { ChatRequest, ChatResponse, ToolDebug } from "@/shared/types/chat";
-import { extractIntent } from "./intent";
+import type {
+  ChatRequest,
+  ChatResponse,
+  LLMDebug,
+  ToolDebug,
+} from "@/shared/types/chat";
+import type { ExtractedIntent } from "@/shared/types/intent";
 import { buildGroundedExplanation } from "./explain";
 import { searchProducts } from "@/server/tools/searchProducts";
-import { getLLMMode } from "@/server/llm/index";
+import { getLLMAdapter, getLLMMode } from "@/server/llm/index";
 
 export async function handleChat(req: ChatRequest): Promise<ChatResponse> {
-  // 1. Extract intent deterministically (M1–M4) or via LLM (M5+)
-  const intent = extractIntent(req.message);
+  // 1. Extract intent through the configured LLM boundary.
+  const adapter = await getLLMAdapter();
+  const intentResult = await adapter.extractIntent(req.message);
+  const intent = intentResult.value;
 
   // 2. Short-circuit non-product queries
   if (intent.goal !== "find_product") {
+    const debug = req.debug
+      ? {
+          intent,
+          tool: buildToolDebug(intent, 0, 0),
+          llmMode: getLLMMode(),
+          llm: buildLLMDebug({
+            intentProvider: intentResult.provider,
+            explanationProvider: "none",
+            shortCircuited: true,
+            fallbackUsed: intentResult.fallbackUsed,
+            model: intentResult.model,
+          }),
+        }
+      : undefined;
+
     return {
       assistantMessage:
         "I'm a product recommendation assistant. Try asking: \"I have oily skin and need SPF under 500 CZK.\"",
@@ -24,6 +46,7 @@ export async function handleChat(req: ChatRequest): Promise<ChatResponse> {
         "Fragrance-free moisturizer for dry skin",
         "Serum for acne-prone skin",
       ],
+      debug,
     };
   }
 
@@ -32,27 +55,34 @@ export async function handleChat(req: ChatRequest): Promise<ChatResponse> {
   const searchResult = searchProducts(constraints);
 
   // 4. Build grounded explanation
-  const { message, followUps: llmFollowUps } = await buildGroundedExplanation(
+  const explanationResult = await buildGroundedExplanation(
     searchResult.matches,
     intent,
   );
+  const { message, followUps: llmFollowUps } = explanationResult.value;
 
   // 5. Generate deterministic follow-up chips from unused constraints
   const followUps = generateFollowUps(constraints, searchResult.matches.length, llmFollowUps);
 
   // 6. Build debug payload (only when requested)
-  const toolDebug: ToolDebug = {
-    toolName: "searchProducts",
-    inputConstraints: constraints,
-    candidateCount: searchResult.matches.length,
-    rejectedCount: searchResult.rejected.length,
-  };
+  const toolDebug = buildToolDebug(
+    intent,
+    searchResult.matches.length,
+    searchResult.rejected.length,
+  );
 
   const debug = req.debug
     ? {
         intent,
         tool: toolDebug,
         llmMode: getLLMMode(),
+        llm: buildLLMDebug({
+          intentProvider: intentResult.provider,
+          explanationProvider: explanationResult.provider,
+          shortCircuited: false,
+          fallbackUsed: intentResult.fallbackUsed || explanationResult.fallbackUsed,
+          model: explanationResult.model ?? intentResult.model,
+        }),
       }
     : undefined;
 
@@ -69,7 +99,7 @@ export async function handleChat(req: ChatRequest): Promise<ChatResponse> {
 // ---------------------------------------------------------------------------
 
 function generateFollowUps(
-  constraints: ReturnType<typeof extractIntent>["constraints"],
+  constraints: ExtractedIntent["constraints"],
   matchCount: number,
   llmFollowUps: string[],
 ): string[] {
@@ -117,4 +147,28 @@ function generateFollowUps(
   }
 
   return chips.slice(0, 3);
+}
+
+function buildToolDebug(
+  intent: ExtractedIntent,
+  candidateCount: number,
+  rejectedCount: number,
+): ToolDebug {
+  return {
+    toolName: "searchProducts",
+    inputConstraints: intent.constraints,
+    candidateCount,
+    rejectedCount,
+  };
+}
+
+function buildLLMDebug(debug: LLMDebug): LLMDebug {
+  return debug.model === undefined
+    ? {
+        intentProvider: debug.intentProvider,
+        explanationProvider: debug.explanationProvider,
+        shortCircuited: debug.shortCircuited,
+        fallbackUsed: debug.fallbackUsed,
+      }
+    : debug;
 }
