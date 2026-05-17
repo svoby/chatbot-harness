@@ -29,8 +29,8 @@
 ┌──────────────────▼──────────────────────────────┐
 │  Adapters & Data  (server-only)                 │
 │  server/llm/index.ts     ← interface            │
-│  server/llm/mock.ts      ← M1–M4                │
-│  server/llm/provider.ts  ← M5+                  │
+│  server/llm/mock.ts      ← deterministic mode   │
+│  server/llm/provider.ts  ← real provider mode   │
 │  server/data/catalog.ts  ← local JSON           │
 │  server/data/catalog.json                       │
 └─────────────────────────────────────────────────┘
@@ -69,10 +69,10 @@ chatbot/
 
 1. `route.ts` — validate `ChatRequest`.
 2. `orchestrator.handleChat(req)`:
-   a. `extractIntent(message)` — deterministic parser (M1–M4) or LLM adapter (M5+).
+   a. `extractIntent(message)` — LLM adapter with deterministic fallback.
    b. `searchProducts(constraints)` — filter + rank from catalog; returns `{ matches, rejected }`.
    c. Top-N (N=3) selected by score.
-   d. `buildGroundedExplanation(topN, intent)` — template (M1–M4) or LLM adapter (M5+).
+   d. `buildGroundedExplanation(topN, intent)` — LLM adapter with deterministic fallback.
    e. `followUps` — generated deterministically from unused constraints.
 3. Return `ChatResponse`.
 
@@ -81,7 +81,7 @@ chatbot/
 Two adapters exist. Everything else is inlined.
 
 - **`LLMAdapter`** (real boundary) — interface in `server/llm/index.ts`.
-  Implementations: `mock.ts` (default), `provider.ts` (M5+).
+  Implementations: `mock.ts` (default), `provider.ts` (real mode).
   Orchestrator imports the interface; implementation selected by `LLM_MODE` env var.
 
 - **`searchProducts`** (soft boundary) — single function, typed signature.
@@ -92,7 +92,7 @@ Adapters are **not** added for: ranking strategy, prompt templates, telemetry, D
 Rule: introduce an adapter only when there are 2 real implementations or 1 real + 1 test double.
 See [DECISIONS.md](DECISIONS.md).
 
-## LLM system prompts (M5+)
+## LLM system prompts
 
 **Intent extraction** (`gpt-4o-mini`, `temperature: 0`, JSON mode):
 - Instructs the model to extract `ProductSearchConstraints` as structured JSON.

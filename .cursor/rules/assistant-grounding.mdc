@@ -29,7 +29,7 @@ The LLM is **never** the source of product facts.
   deterministic path and still return a valid `ChatResponse`.
 - Never propagate a raw LLM parse error to the client.
 
-## System prompt constraint (M5+)
+## System prompt constraint
 
 The LLM system prompt for explanation must include:
 > "Only describe products and fields present in the JSON provided. Do not invent facts."

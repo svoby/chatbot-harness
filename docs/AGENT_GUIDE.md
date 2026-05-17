@@ -9,12 +9,15 @@ this file summarizes project-specific operating rules.
 1. Read [docs/README.md](README.md) - the doc map and update protocol.
 2. Read [docs/PROJECT_BRIEF.md](PROJECT_BRIEF.md) - the invariant and non-goals.
 3. Read [docs/ARCHITECTURE.md](ARCHITECTURE.md) before any change that crosses layers.
-4. Read [docs/ROADMAP.md](ROADMAP.md) to know which milestone you're working on.
+4. Read [docs/IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) only to
+   understand sequencing or create the next GitHub issue. For implementation,
+   follow the GitHub issue body as the task contract.
 
 ## Core rules
 
 ### Stay in scope
-- Work on **one milestone at a time**. Do not pre-implement future milestones.
+- Work on one approved issue at a time. Do not implement directly from the
+  implementation plan or pre-implement later work from it.
 - If scope needs to expand, stop and ask the user.
 
 ### Keep diffs small
@@ -56,10 +59,14 @@ is only the Cursor adapter for that policy.
   the task contract and the agent may create the issue branch, commit, push, and open
   a PR without repeated permission.
 - After opening an issue-driven PR, run the PR review gate and publish the verdict on
-  the PR before handoff. Prefer an independent reviewer/subagent when the tool permits
-  it; otherwise perform the same review pass in-agent.
+  the PR before handoff. The implementation agent must initiate this step. Prefer an
+  independent reviewer/subagent when the tool permits it; otherwise perform the same
+  review pass in-agent and state that independent review was unavailable.
 - One issue = one branch = one PR. Parallel issue agents require isolated worktrees
   or checkouts and non-overlapping allowed file sets.
+- Worktrees are temporary isolation for active issue work. Once the PR is merged
+  and the checkout is clean, remove the worktree; prune stale worktree metadata
+  when `git worktree list` points at missing paths.
 - Agents never merge PRs unless a human explicitly requests it.
 
 ## Escalation

@@ -42,7 +42,10 @@ Required issue workflow:
 6. Run the verification requested by the issue.
 7. Commit, push, and open a PR against `master` unless the issue specifies another base.
 8. Run the PR review gate and publish the review result on the PR before handoff.
-   Prefer `.cursor/agents/code-review.md` for the independent review pass.
+   The implementation agent must initiate this step after opening the PR. Use
+   `.cursor/agents/code-review.md` for the independent review pass when available.
+   If a separate reviewer is unavailable, perform the same review pass in-agent
+   and state that fallback in the visible PR comment.
 9. Never merge the PR unless a human explicitly requests it.
 
 ## Branch naming
@@ -78,7 +81,8 @@ Every issue-driven PR must include:
 - `Closes #N`
 
 Every issue-driven PR must also have a visible review gate result on the PR before
-the agent calls the work ready for human merge.
+the agent calls the work ready for human merge. Prefer a separate review agent;
+in-agent review is only a fallback that must be disclosed in the PR comment.
 
 ## When work is done
 

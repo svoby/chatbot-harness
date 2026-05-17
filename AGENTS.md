@@ -26,7 +26,7 @@ Precedence:
 
 ## Where To Look
 
-- `docs/` - project memory: brief, architecture, slice definition, API contracts, roadmap, decisions.
+- `docs/` - project memory: brief, architecture, API contracts, current implementation plan, decisions.
 - `.cursor/rules/` - always-on and file-scoped adapters:
   - `project-memory.mdc` - doc reading and update protocol.
   - `assistant-grounding.mdc` - LLM grounding invariant (`server/**`, `app/api/**`).
@@ -38,6 +38,17 @@ Precedence:
 - `.cursor/prompts/` - reusable task prompts.
 - `.cursor/agents/` - review agent config.
 - `.codex/skills/pr-review-gate/` - Codex PR review gate used after issue PRs.
+
+Docs ownership rule:
+
+- Do not create new persistent docs unless the issue explicitly asks for it.
+- When updating docs, update the owning document only, prefer links over
+  restating, and do not duplicate architecture, API contracts, deferred scope,
+  decisions, or implementation sequencing.
+- If a change appears to require reorganizing docs ownership, stop and propose
+  a dedicated docs cleanup issue.
+- Reviewers must flag duplicated, stale, or conflicting docs as review
+  findings.
 
 ## Product Invariants
 
@@ -149,8 +160,12 @@ Workflow:
 8. Commit and push the scoped change.
 9. Open a PR against `master` unless the issue specifies another base.
 10. Run the PR review gate before handing off:
-    - Prefer an independent reviewer/subagent when the current tool and user permissions allow it.
-    - Otherwise perform the same review procedure in the implementation agent.
+    - The implementation agent must initiate this step after opening the PR.
+    - Use an independent reviewer/subagent when the current tool and user
+      permissions allow it. This is the default path for issue-driven PRs.
+    - Otherwise perform the same review procedure in the implementation agent
+      and state in the visible PR comment that independent review was not
+      available.
     - Review the PR diff against the issue contract, required context, allowed scope,
       product invariants, and verification output.
     - Publish the review result visibly on the PR as a review or top-level PR comment.
@@ -170,8 +185,9 @@ Every issue-driven PR body must include:
 
 Every issue-driven PR must also have a visible review gate comment before handoff. Use
 `.codex/skills/pr-review-gate/SKILL.md` for Codex sessions and mirror its verdict format
-in other tools. If GitHub or tool permissions prevent posting the review, stop and report
-that blocker instead of silently finishing.
+in other tools. If the tool supports a separate review agent, the implementation agent
+must run it before posting the review result. If GitHub or tool permissions prevent
+posting the review, stop and report that blocker instead of silently finishing.
 
 ### Parallel Issue Work And Worktrees
 
@@ -183,6 +199,12 @@ that blocker instead of silently finishing.
   allowed files.
 - For a single issue in the current checkout, creating the issue branch is enough;
   worktrees are required only for parallel work or when the launcher environment provides them.
+- Worktrees are temporary isolation, not project history. After the PR is merged
+  and the worktree is clean, remove the worktree; keep or delete the branch
+  separately according to normal branch cleanup policy.
+- If `git worktree list` shows a path that no longer exists, run
+  `git worktree prune` after confirming no active agent/editor is using that
+  checkout.
 
 ## Done Criteria
 

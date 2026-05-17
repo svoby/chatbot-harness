@@ -1,8 +1,8 @@
 # MVP Architecture And Data Plan
 
-This document defines the production-shaped MVP path for the AI Product
-Assistant. It is a planning document only: it does not authorize immediate
-infrastructure or product-code implementation.
+This document defines the production-shaped MVP architecture direction for the
+AI Product Assistant. It is a reference document only: the runnable
+implementation sequence lives in [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md).
 
 ## MVP Definition
 
@@ -116,17 +116,6 @@ Model guardrails:
 - Allow a higher-quality model for harder reasoning through configuration, not
   code changes.
 - Preserve deterministic fallbacks when model parsing or explanation fails.
-
-## Migration Phases
-
-| Phase | Goal | Exit criteria |
-|---|---|---|
-| 0 | Current local harness | JSON catalog, deterministic retrieval, mock/real LLM modes work. |
-| 1 | Deployable app | Vercel project connected, env vars configured, CI still uses `npm ci`. |
-| 2 | Managed Postgres foundation | Managed Postgres selected, migrations/seeding defined, current catalog seeded. |
-| 3 | DB-backed product retrieval | Product retrieval reads Postgres while `POST /api/chat` and UI contracts stay unchanged. |
-| 4 | Optional source documents/RAG | Product retrieval is stable; source tables/chunks added for non-product facts only. |
-| 5 | Optional orders/customer demo | Minimal order/customer context added only if needed for a concrete demo. |
 
 ## Risks And Guardrails
 
