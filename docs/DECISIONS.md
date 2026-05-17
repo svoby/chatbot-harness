@@ -120,3 +120,17 @@ plan, keep stable reference docs, and delete historical bootstrap roadmap/slice
 documents instead of archiving them.
 **Consequences:** Agents should use stable docs for product and architecture
 truth, then use the implementation plan for follow-up issue creation.
+
+---
+
+## 2026-05-17 — Postgres foundation uses `pg` with SQL-first migrations
+
+**Context:** MVP step 4 needs managed Postgres connectivity and initial schema
+foundation without changing `searchProducts` authority or requiring DB env vars
+for mock/no-key runs.
+**Decision:** Use the lightweight `pg` client in server-only modules plus
+checked-in SQL migration files under `server/db/migrations`.
+**Consequences:** Database access is prepared for future seed/retrieval steps
+while current product retrieval remains catalog-backed. DB setup stays optional
+for local/CI build checks, and migrations can be applied explicitly via
+`DATABASE_URL` and `npm run db:migrate`.
