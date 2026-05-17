@@ -20,9 +20,19 @@ export function getLLMMode(): LLMMode {
   return process.env.LLM_MODE === "real" ? "real" : "mock";
 }
 
+function assertRealProviderConfigured(): void {
+  if (!process.env.OPENAI_API_KEY) {
+    console.error(
+      "[LLM] LLM_MODE=real requires OPENAI_API_KEY to be configured server-side.",
+    );
+    throw new Error("LLM provider is not configured");
+  }
+}
+
 export async function getLLMAdapter(): Promise<LLMAdapter> {
   const mode = getLLMMode();
   if (mode === "real") {
+    assertRealProviderConfigured();
     const { realAdapter } = await import("./provider");
     return realAdapter;
   }

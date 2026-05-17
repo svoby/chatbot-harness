@@ -6,13 +6,31 @@ import { NextRequest, NextResponse } from "next/server";
 import type { ChatRequest, ChatResponse } from "@/shared/types/chat";
 import { handleChat } from "@/server/assistant/orchestrator";
 
-function isValidRequest(body: unknown): body is ChatRequest {
-  return (
-    typeof body === "object" &&
-    body !== null &&
-    typeof (body as Record<string, unknown>).message === "string" &&
-    (body as Record<string, unknown>).message !== ""
-  );
+type RequestParseResult =
+  | { ok: true; value: ChatRequest }
+  | { ok: false; error: string };
+
+function parseChatRequest(body: unknown): RequestParseResult {
+  if (typeof body !== "object" || body === null) {
+    return { ok: false, error: "message is required and must be a non-empty string" };
+  }
+
+  const payload = body as Record<string, unknown>;
+  if (typeof payload.message !== "string" || payload.message.trim() === "") {
+    return { ok: false, error: "message is required and must be a non-empty string" };
+  }
+
+  if (payload.debug !== undefined && typeof payload.debug !== "boolean") {
+    return { ok: false, error: "debug must be a boolean when provided" };
+  }
+
+  return {
+    ok: true,
+    value: {
+      message: payload.message.trim(),
+      ...(payload.debug !== undefined ? { debug: payload.debug } : {}),
+    },
+  };
 }
 
 export async function POST(
@@ -25,15 +43,13 @@ export async function POST(
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  if (!isValidRequest(body)) {
-    return NextResponse.json(
-      { error: "message is required and must be a non-empty string" },
-      { status: 400 },
-    );
+  const parsed = parseChatRequest(body);
+  if (!parsed.ok) {
+    return NextResponse.json({ error: parsed.error }, { status: 400 });
   }
 
   try {
-    const response = await handleChat(body);
+    const response = await handleChat(parsed.value);
     return NextResponse.json(response);
   } catch (err) {
     console.error("[/api/chat] Orchestrator error:", err);
