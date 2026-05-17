@@ -19,6 +19,19 @@ Do not introduce:
 - Package or lockfile changes unless a later deployment issue explicitly
   requires them.
 
+## Repository Shape
+
+This is a single Next.js app at the repository root:
+
+- Package manager: npm, using `package-lock.json`.
+- Install command: `npm ci`.
+- Development command: `npm run dev`.
+- Build command: `npm run build`.
+- Commands are defined in the root `package.json` `scripts` section.
+- Source lives in `app/`, `components/`, `server/`, and `shared/`.
+- Local build output is generated under `.next/`; Vercel owns the deployed
+  Next.js output and no generated deployment output should be committed.
+
 ## Vercel Project Setup
 
 Use the Vercel dashboard or approved organization tooling:
@@ -29,6 +42,7 @@ Use the Vercel dashboard or approved organization tooling:
    failure requires changing them:
    - Install command: `npm ci`
    - Build command: `npm run build`
+   - Development command: `npm run dev`
 4. Configure the production branch as `master`.
 5. Enable GitHub pull request preview deployments.
 6. Add only server-side environment variables in Vercel project settings.
@@ -44,8 +58,12 @@ per environment in the Vercel dashboard.
 
 | Variable | Required | Scope | Value | Notes |
 |---|---:|---|---|---|
-| `LLM_MODE` | Yes | Server-side | `mock` or `real` | Missing or any value other than `real` behaves as `mock`. |
+| `LLM_MODE` | No | Server-side | `mock` or `real` | Missing or any value other than `real` behaves as `mock`. |
 | `OPENAI_API_KEY` | Only when `LLM_MODE=real` | Server-side secret | OpenAI API key | Never expose through `NEXT_PUBLIC_*`. |
+
+No environment variables are required for the default mock deployment path.
+Set `LLM_MODE=real` and `OPENAI_API_KEY` only when intentionally testing or
+running the real provider adapter.
 
 Recommended deployment values:
 
