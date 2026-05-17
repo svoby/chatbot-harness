@@ -10,6 +10,7 @@ Every AI agent and new contributor should read this file first.
 | [PROJECT_BRIEF.md](PROJECT_BRIEF.md) | Product intent, architectural invariant, non-goals | Before any feature work |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Layers, client/server boundary, folder layout, orchestration flow | Before changes that cross layers |
 | [MVP_ARCHITECTURE.md](MVP_ARCHITECTURE.md) | Production-shaped MVP stack, data plan, retrieval/RAG boundaries | Before adding deploy, database, or RAG infrastructure |
+| [DEPLOYMENT.md](DEPLOYMENT.md) | Deployment handoff checklist, server-side env vars, preview/production smoke checks | Before connecting or verifying a Vercel deployment |
 | [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) | Current issue-writing plan and dependency order for MVP follow-up work | Before creating follow-up implementation issues; do not implement directly from it |
 | [API_CONTRACTS.md](API_CONTRACTS.md) | `ChatRequest`/`ChatResponse`/`Product`/intent types and their semantics | Before changing any of those types |
 | [DECISIONS.md](DECISIONS.md) | Append-only mini-ADRs (date, context, decision, consequences) | When making any non-trivial judgment call |
