@@ -154,3 +154,6 @@ and Notino-scale catalog.
 - Generate dependency and lockfile changes from Linux/WSL or equivalent Linux.
 - Update `API_CONTRACTS.md`, `ARCHITECTURE.md`, and `DECISIONS.md` only when
   the implementing issue changes their owned topics.
+- Express current planning using explicit dependency-step position and current
+  issue number; avoid unexplained `M0`-style milestone labels unless a live
+  milestone index exists in the repo.
