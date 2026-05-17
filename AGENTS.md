@@ -50,6 +50,25 @@ Docs ownership rule:
 - Reviewers must flag duplicated, stale, or conflicting docs as review
   findings.
 
+Issue label rules:
+
+- Agents must not pick arbitrary open issues as work.
+- An issue is executable by an agent only when it has `agent-ready` and does not
+  have `blocked` or `needs-human`.
+- Use one `type:*` label to describe the kind of work, such as
+  `type:planning`, `type:cleanup`, `type:readiness`, `type:implementation`, or
+  `type:review`.
+- Use one or more `area:*` labels to describe the affected domain, such as
+  `area:docs`, `area:deploy`, `area:llm`, `area:data`, `area:retrieval`,
+  `area:ui`, `area:ci`, or `area:agent-workflow`.
+- `blocked` means an agent must not start until the blocker is removed.
+- `needs-human` means the issue waits for a human-owned step such as account
+  setup, billing, credentials, secrets, production URLs, or external service
+  configuration.
+- `parallel-ready` means the issue is safe to run beside another active issue
+  only when the issue body also declares non-overlapping allowed files or areas.
+- If labels conflict with the issue body, stop and ask for clarification.
+
 ## Product Invariants
 
 > The LLM is never the source of product facts.
@@ -194,7 +213,9 @@ posting the review, stop and report that blocker instead of silently finishing.
 - One issue = one branch = one PR.
 - For parallel issue agents, also use one isolated worktree or checkout per issue.
 - Never let two agents share the same mutable working directory.
-- Run parallel issue agents only when their allowed file sets do not overlap.
+- Run parallel issue agents only when every issue has `parallel-ready`, every
+  issue body declares non-overlapping allowed files or areas, and the active PRs
+  do not overlap those areas.
 - Before editing, check current branch/status and open PRs for overlap with the issue's
   allowed files.
 - For a single issue in the current checkout, creating the issue branch is enough;
