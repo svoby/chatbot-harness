@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "db:migrate": "psql \"$DATABASE_URL\" -f server/db/migrations/0001_create_products.sql"
+    "db:migrate": "bash -c 'set -euo pipefail; ls -1 server/db/migrations/*.sql | sort | while read -r file; do psql \"$DATABASE_URL\" -f \"$file\"; done'"
   },
   "dependencies": {
     "next": "16.2.6",

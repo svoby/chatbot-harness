@@ -92,6 +92,9 @@ DATABASE_URL=postgres://... npm run db:migrate
 
 This migration command is server-side infrastructure setup only; it does not
 switch product retrieval away from the local catalog.
+It currently applies sorted SQL files from `server/db/migrations`; rerunning
+already-applied files can fail until a dedicated migration tracking step is
+introduced.
 
 ## Preview Expectations
 

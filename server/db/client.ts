@@ -4,14 +4,24 @@ import { Pool } from "pg";
 
 import { getDatabaseUrl } from "@/server/db/config";
 
-let pool: Pool | undefined;
+interface GlobalWithDatabasePool {
+  __productAssistantDbPool?: Pool;
+}
+
+const globalForDatabasePool = globalThis as typeof globalThis & GlobalWithDatabasePool;
+const DEFAULT_POOL_MAX_CONNECTIONS = 10;
+const DEFAULT_CONNECTION_TIMEOUT_MS = 10_000;
+const DEFAULT_IDLE_TIMEOUT_MS = 30_000;
 
 export function getDatabasePool(): Pool {
-  if (!pool) {
-    pool = new Pool({
+  if (!globalForDatabasePool.__productAssistantDbPool) {
+    globalForDatabasePool.__productAssistantDbPool = new Pool({
       connectionString: getDatabaseUrl(),
+      max: DEFAULT_POOL_MAX_CONNECTIONS,
+      connectionTimeoutMillis: DEFAULT_CONNECTION_TIMEOUT_MS,
+      idleTimeoutMillis: DEFAULT_IDLE_TIMEOUT_MS,
     });
   }
 
-  return pool;
+  return globalForDatabasePool.__productAssistantDbPool;
 }
