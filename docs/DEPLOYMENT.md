@@ -152,6 +152,19 @@ If `LLM_MODE=real` is configured without `OPENAI_API_KEY`, the route should not
 be considered ready for production. Either add the server-side key or switch the
 environment back to `mock`.
 
+To verify local provider misconfiguration handling, start the dev server with
+real mode and no key:
+
+```bash
+LLM_MODE=real OPENAI_API_KEY= npm run dev
+```
+
+Then send the same `/api/chat` request. Expected result:
+
+- HTTP 500 with the generic fallback assistant response.
+- Server logs include a missing `OPENAI_API_KEY` configuration error.
+- No provider key or secret value is returned in the response.
+
 ## Handoff Checklist
 
 Before handing the app to a deployment owner, confirm:
