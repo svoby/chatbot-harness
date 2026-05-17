@@ -91,7 +91,7 @@ is connected. Use previews to verify:
 - A chat request returns recommendations.
 - Product names, prices, and attributes come from the catalog-backed tool.
 - Debug mode, when enabled in the UI, reports `llmMode` matching the configured
-  environment.
+  environment and `debug.llm` stage providers/fallback flags.
 
 Preview deployments may run in `mock` mode when provider credentials are not
 available. That is expected and should not block documentation-only or UI-only
@@ -133,6 +133,8 @@ Expected local result:
 - HTTP 200.
 - `recommendations` is present.
 - `debug.llmMode` is `mock`.
+- `debug.llm.intentProvider` and `debug.llm.explanationProvider` are `mock`.
+- `debug.llm.fallbackUsed` is `false`.
 - No `OPENAI_API_KEY` is required.
 
 Run the same API smoke check against a Vercel preview or production URL:
@@ -148,6 +150,8 @@ Expected deployed result:
 - HTTP 200.
 - `recommendations` is present.
 - `debug.llmMode` matches the Vercel `LLM_MODE` setting.
+- In real mode with a working provider key, `debug.llm` shows `openai` for
+  provider-backed stages and includes the configured model.
 - Product facts are limited to returned catalog products.
 
 If `LLM_MODE=real` is configured without `OPENAI_API_KEY`, the route should not
@@ -166,6 +170,11 @@ Then send the same `/api/chat` request. Expected result:
 - HTTP 500 with the generic fallback assistant response.
 - Server logs include a missing `OPENAI_API_KEY` configuration error.
 - No provider key or secret value is returned in the response.
+
+For a non-product/meta request such as `Are you an LLM?` with `debug: true`,
+the API may return the product-assistant guardrail response. In that case,
+`debug.llm.shortCircuited` is `true` and `debug.llm.explanationProvider` is
+`none`.
 
 ## Handoff Checklist
 

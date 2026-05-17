@@ -16,6 +16,20 @@ export interface ToolDebug {
   rejectedCount: number;
 }
 
+export type LLMDebugProvider =
+  | "openai"
+  | "mock"
+  | "deterministic-fallback"
+  | "none";
+
+export interface LLMDebug {
+  intentProvider: LLMDebugProvider;
+  explanationProvider: LLMDebugProvider;
+  shortCircuited: boolean;
+  fallbackUsed: boolean;
+  model?: string;
+}
+
 export interface ChatResponse {
   assistantMessage: string;
   recommendations: ProductRecommendation[];
@@ -24,5 +38,6 @@ export interface ChatResponse {
     intent: ExtractedIntent;
     tool: ToolDebug;
     llmMode: "mock" | "real";
+    llm: LLMDebug;
   };
 }

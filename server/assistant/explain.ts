@@ -5,12 +5,12 @@ import "server-only";
 
 import type { ExtractedIntent } from "@/shared/types/intent";
 import type { ProductRecommendation } from "@/shared/types/product";
-import { getLLMAdapter } from "@/server/llm/index";
+import { getLLMAdapter, type LLMStageResult } from "@/server/llm/index";
 
 export async function buildGroundedExplanation(
   products: ProductRecommendation[],
   intent: ExtractedIntent,
-): Promise<{ message: string; followUps: string[] }> {
+): Promise<LLMStageResult<{ message: string; followUps: string[] }>> {
   const adapter = await getLLMAdapter();
   return adapter.explain({ intent, products });
 }

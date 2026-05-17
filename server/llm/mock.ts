@@ -2,34 +2,39 @@ import "server-only";
 // Mock LLM adapter — used through M4. No API key required.
 // Replaced by provider.ts in M5 when LLM_MODE=real.
 
-import type { LLMAdapter } from "./index";
+import type { LLMAdapter, LLMStageResult } from "./index";
 import type { ExtractedIntent } from "@/shared/types/intent";
 import type { ProductRecommendation } from "@/shared/types/product";
+import { extractIntent } from "@/server/assistant/intent";
 
 export const mockAdapter: LLMAdapter = {
-  async extractIntent(text: string): Promise<ExtractedIntent> {
-    // The real intent extraction is done deterministically in server/assistant/intent.ts.
-    // This mock is a no-op pass-through; the orchestrator calls intent.ts directly in M1–M4.
+  async extractIntent(text: string): Promise<LLMStageResult<ExtractedIntent>> {
+    console.info("[LLM] intent stage completed", { provider: "mock" });
     return {
-      goal: "find_product",
-      constraints: {},
-      rawUserText: text,
+      value: extractIntent(text),
+      provider: "mock",
+      fallbackUsed: false,
     };
   },
 
   async explain(input: {
     intent: ExtractedIntent;
     products: ProductRecommendation[];
-  }): Promise<{ message: string; followUps: string[] }> {
+  }): Promise<LLMStageResult<{ message: string; followUps: string[] }>> {
     // Template-based explanation — grounded in the passed products.
     const { intent, products } = input;
     const { constraints } = intent;
 
     if (products.length === 0) {
+      console.info("[LLM] explanation stage completed", { provider: "mock" });
       return {
-        message:
-          "I couldn't find products matching all your criteria. Try relaxing one constraint — for example, raising your budget or removing the fragrance-free filter.",
-        followUps: ["Increase budget to 800 CZK", "Include products with fragrance", "Show all SPF options"],
+        value: {
+          message:
+            "I couldn't find products matching all your criteria. Try relaxing one constraint — for example, raising your budget or removing the fragrance-free filter.",
+          followUps: ["Increase budget to 800 CZK", "Include products with fragrance", "Show all SPF options"],
+        },
+        provider: "mock",
+        fallbackUsed: false,
       };
     }
 
@@ -57,6 +62,11 @@ export const mockAdapter: LLMAdapter = {
 
     const message = `${contextStr} ${countStr}. All recommendations are grounded in the product catalog — no guesses.`;
 
-    return { message, followUps: [] };
+    console.info("[LLM] explanation stage completed", { provider: "mock" });
+    return {
+      value: { message, followUps: [] },
+      provider: "mock",
+      fallbackUsed: false,
+    };
   },
 };

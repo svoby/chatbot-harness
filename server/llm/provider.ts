@@ -6,7 +6,7 @@ import "server-only";
 // See docs/DECISIONS.md — 2026-05-12 LLM provider choice.
 
 import OpenAI from "openai";
-import type { LLMAdapter } from "./index";
+import type { LLMAdapter, LLMStageResult } from "./index";
 import type { ExtractedIntent, ProductSearchConstraints } from "@/shared/types/intent";
 import type { ProductRecommendation } from "@/shared/types/product";
 import { extractIntent } from "@/server/assistant/intent";
@@ -227,26 +227,66 @@ function isValidExplanationPayload(
 // ---------------------------------------------------------------------------
 
 export const realAdapter: LLMAdapter = {
-  async extractIntent(text: string): Promise<ExtractedIntent> {
+  async extractIntent(text: string): Promise<LLMStageResult<ExtractedIntent>> {
+    const model = getOpenAIModel();
     try {
-      return await extractIntentViaLLM(text);
+      const value = await extractIntentViaLLM(text);
+      console.info("[LLM] intent stage completed", {
+        provider: "openai",
+        model,
+      });
+      return {
+        value,
+        provider: "openai",
+        fallbackUsed: false,
+        model,
+      };
     } catch (err) {
-      console.warn("[LLM] extractIntent failed, falling back to deterministic:", err);
-      return extractIntent(text);
+      console.warn("[LLM] intent stage failed, using deterministic fallback", {
+        provider: "openai",
+        model,
+        error: err instanceof Error ? err.message : "Unknown error",
+      });
+      return {
+        value: extractIntent(text),
+        provider: "deterministic-fallback",
+        fallbackUsed: true,
+        model,
+      };
     }
   },
 
   async explain(input: {
     intent: ExtractedIntent;
     products: ProductRecommendation[];
-  }): Promise<{ message: string; followUps: string[] }> {
+  }): Promise<LLMStageResult<{ message: string; followUps: string[] }>> {
+    const model = getOpenAIModel();
     try {
-      return await explainViaLLM(input);
+      const value = await explainViaLLM(input);
+      console.info("[LLM] explanation stage completed", {
+        provider: "openai",
+        model,
+      });
+      return {
+        value,
+        provider: "openai",
+        fallbackUsed: false,
+        model,
+      };
     } catch (err) {
-      console.warn("[LLM] explain failed, falling back to template:", err);
+      console.warn("[LLM] explanation stage failed, using mock fallback", {
+        provider: "openai",
+        model,
+        error: err instanceof Error ? err.message : "Unknown error",
+      });
       // Fall back to the mock adapter's template
       const { mockAdapter } = await import("./mock");
-      return mockAdapter.explain(input);
+      const fallback = await mockAdapter.explain(input);
+      return {
+        ...fallback,
+        fallbackUsed: true,
+        model,
+      };
     }
   },
 };

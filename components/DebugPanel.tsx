@@ -30,6 +30,45 @@ export default function DebugPanel({ debug }: Props) {
             <code className="bg-amber-100 px-1 rounded">{debug.llmMode}</code>
           </div>
 
+          {/* LLM runtime */}
+          <div>
+            <p className="font-semibold text-amber-800 mb-1">LLM Runtime</p>
+            <div className="text-amber-700 space-y-0.5">
+              <div>
+                <span className="text-amber-500">intent provider:</span>{" "}
+                <code className="bg-amber-100 px-1 rounded">
+                  {debug.llm.intentProvider}
+                </code>
+              </div>
+              <div>
+                <span className="text-amber-500">explanation provider:</span>{" "}
+                <code className="bg-amber-100 px-1 rounded">
+                  {debug.llm.explanationProvider}
+                </code>
+              </div>
+              <div>
+                <span className="text-amber-500">short-circuited:</span>{" "}
+                <code className="bg-amber-100 px-1 rounded">
+                  {String(debug.llm.shortCircuited)}
+                </code>
+              </div>
+              <div>
+                <span className="text-amber-500">fallback used:</span>{" "}
+                <code className="bg-amber-100 px-1 rounded">
+                  {String(debug.llm.fallbackUsed)}
+                </code>
+              </div>
+              {debug.llm.model && (
+                <div>
+                  <span className="text-amber-500">model:</span>{" "}
+                  <code className="bg-amber-100 px-1 rounded">
+                    {debug.llm.model}
+                  </code>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Extracted intent */}
           <div>
             <p className="font-semibold text-amber-800 mb-1">Extracted Intent</p>
